@@ -45,7 +45,7 @@ function create_new_project() {
   docker-compose -p ${project_name} restart web
 }
 
-if [ ! -f "mix.exs" ]; then
+if [ -f "docker-compose.template" ]; then
   echo "Initilizing ${project_name}"
   create_new_project
 else
