@@ -3,12 +3,12 @@
 Heavily based on [Starting a Phoenix Project with Docker by Robert Beene](https://echobind.com/blog/using-phoenix-with-docker/)
 
 ## Usage
-
+```
 mkdir my_project
 cd my_project
 curl -L https://github.com/Stratouklos/phoenix_starter/releases/download/0.1/dockerized-phoenix.tar.gz | tar xvz
 ./init my_project
-
+```
 Subsequent init executions start the project and run ecto.create
 
 ## What it does
@@ -22,4 +22,4 @@ Subsequent init executions start the project and run ecto.create
 
 ## To release
 
-git archive --format=tar.gz master > dockerized-phoenix.tar.gz
+`git archive --format=tar.gz master > dockerized-phoenix.tar.gz`
