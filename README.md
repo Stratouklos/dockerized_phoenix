@@ -1,2 +1,1 @@
-# phoenix_starter
-Dockerized Phoenix Starter
+# Dockerized Phoenix Initializer
