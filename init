@@ -23,17 +23,19 @@ docker build . -t ${project_name}:latest
 
 function create_new_project() {
   #Create the project and get deps
-  docker run -v `pwd`:/app ${project_name}:latest mix phoenix.new ${project_name}
-  docker run -v `pwd`/${project_name}:/app ${project_name}:latest mix deps.get
-
-  #Config the dev database
-  sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' ${project_name}/config/dev.exs
-  rm -f ${project_name}/config/dev.exs.bak
+  docker run -v `pwd`:/app --rm ${project_name}:latest mix phoenix.new ${project_name}
 
   # Move everything to the root directory
   mv ${project_name}/* ./
   mv ${project_name}/.gitignore ./
   rm -rf ${project_name}
+
+  docker run -v `pwd`:/app --rm ${project_name}:latest mix deps.get
+  docker run -v `pwd`:/app --rm ${project_name}:latest npm install
+
+  #Config the dev database
+  sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' /config/dev.exs
+  rm -f /config/dev.exs.bak
 
   #Set the image name in docker-compose
   sed -i.bak "s/replace_me_with_proper_image/${project_name}:latest/g" docker-compose.template
