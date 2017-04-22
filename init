@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+#set -o xtrace
+
+function usage () {
+    printf """
+    DESCRIPTION:
+        Create a new dockerized Phoenix project
+    Example: ./init hello_world
+    """
+
+}
+
+if  [[ -z  $1  ]]; then
+  usage
+  exit 1
+fi
+
+docker-compose -p $1 up -d
+docker-compose -p $1 run web mix phoenix.new $1
+mv $1/* ./
+mv $1/.gitignore ./
+rm -rf $1
+sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' config/dev.exs && rm -f config/dev.exs.bak
+docker-compose -p $1 run web mix ecto.create
+docker-compose -p $1 restart web
