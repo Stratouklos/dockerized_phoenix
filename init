@@ -39,15 +39,14 @@ function create_new_project() {
   sed -i.bak "s/replace_me_with_proper_image/${project_name}:latest/g" docker-compose.template
   mv docker-compose.template docker-compose.yml
   rm -r docker-compose.template.bak
-  #Start db and web components
-  docker-compose -p ${project_name} up -d
-  docker-compose -p ${project_name} run web mix ecto.create
-  docker-compose -p ${project_name} restart web
 }
 
 if [ -f "docker-compose.template" ]; then
   echo "Initilizing ${project_name}"
   create_new_project
-else
-  docker-compose -p ${project_name} up -d
 fi
+
+#Start db and web components
+docker-compose -p ${project_name} up -d
+docker-compose -p ${project_name} run web mix ecto.create
+docker-compose -p ${project_name} restart web
