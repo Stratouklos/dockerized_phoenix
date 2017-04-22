@@ -14,8 +14,10 @@ Subsequent init executions start the project and run ecto.create
 ## What it does
 
   * Creates a Phoenix image based on the official elixir:1.3.4
+  * Gets the deps and npm installs
   * Starts a db container based on postgres:9.6-alpine
   * Configures config/dev.exs to talk to the db container
+  * Creates the db with ecto.create
   * Starts a web container serving out of localhost:4000
 
 ## To release
