@@ -34,8 +34,8 @@ function create_new_project() {
   docker run -v `pwd`:/app --rm ${project_name}:latest npm install
 
   #Config the dev database
-  sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' /config/dev.exs
-  rm -f /config/dev.exs.bak
+  sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' config/dev.exs
+  rm -f config/dev.exs.bak
 
   #Set the image name in docker-compose
   sed -i.bak "s/replace_me_with_proper_image/${project_name}:latest/g" docker-compose.template
