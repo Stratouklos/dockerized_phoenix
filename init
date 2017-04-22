@@ -16,11 +16,38 @@ if  [[ -z  $1  ]]; then
   exit 1
 fi
 
-docker-compose -p $1 up -d
-docker-compose -p $1 run web mix phoenix.new $1
-mv $1/* ./
-mv $1/.gitignore ./
-rm -rf $1
-sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' config/dev.exs && rm -f config/dev.exs.bak
-docker-compose -p $1 run web mix ecto.create
-docker-compose -p $1 restart web
+project_name=$1
+
+#Build the image
+docker build . -t ${project_name}:latest
+
+function create_new_project() {
+  #Create the project and get deps
+  docker run -v `pwd`:/app ${project_name}:latest mix phoenix.new ${project_name}
+  docker run -v `pwd`/${project_name}:/app ${project_name}:latest mix deps.get
+
+  #Config the dev database
+  sed -i.bak 's/hostname: "localhost"/hostname: "db"/g' ${project_name}/config/dev.exs
+  rm -f ${project_name}/config/dev.exs.bak
+
+  # Move everything to the root directory
+  mv ${project_name}/* ./
+  mv ${project_name}/.gitignore ./
+  rm -rf ${project_name}
+
+  #Set the image name in docker-compose
+  sed -i.bak "s/replace_me_with_proper_image/${project_name}:latest/g" docker-compose.template
+  mv docker-compose.template docker-compose.yml
+  rm -r docker-compose.template.bak
+  #Start db and web components
+  docker-compose -p ${project_name} up -d
+  docker-compose -p ${project_name} run web mix ecto.create
+  docker-compose -p ${project_name} restart web
+}
+
+if [ ! -f "mix.exs" ]; then
+  echo "Initilizing ${project_name}"
+  create_new_project
+else
+  docker-compose -p ${project_name} up -d
+fi

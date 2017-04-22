@@ -1,0 +1,16 @@
+version: '3'
+services:
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  web:
+    image: replace_me_with_proper_image
+    volumes:
+      - .:/app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+volumes:
+  pgdata:
