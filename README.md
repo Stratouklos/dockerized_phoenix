@@ -6,7 +6,7 @@ Heavily based on [Starting a Phoenix Project with Docker by Robert Beene](https:
 ```
 mkdir my_project
 cd my_project
-curl -L https://github.com/Stratouklos/phoenix_starter/releases/download/0.1/dockerized-phoenix.tar.gz | tar xvz
+curl -L https://github.com/Stratouklos/dockerized_phoenix/releases/download/0.1/dockerized-phoenix.tar.gz | tar xvz
 ./init my_project
 ```
 Subsequent init executions start the project and run ecto.create
